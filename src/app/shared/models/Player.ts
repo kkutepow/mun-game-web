@@ -13,4 +13,5 @@ export class Player {
         slave: Card[];
         other: Card[];
     };
+    level: number;
 }
