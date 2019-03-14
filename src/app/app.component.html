@@ -1,0 +1,29 @@
+<div class="form" *ngIf="!cookiesAreSet()">
+    <p>Enter your name please:</p>
+    <input type="text" [(ngModel)]="name" required />
+    <button (click)="register()">Confirm</button>
+</div>
+
+<div class="list" *ngIf="cookiesAreSet()">
+    <h2>Hi, {{ data }}!</h2>
+    <p>Your enemies:</p>
+    <ul>
+        <li *ngFor="let one of enemies">
+            <div>
+                <b>{{ one.name }}</b>
+                <div class="muted-text">
+                    <div *ngFor="let card of one.openHand">
+                        <a style="color:brown;" (click)="showActions(card.availableActions, one.name, card.key)">{{ card.cardName }}</a>
+                    </div>
+                </div>
+            </div>
+        </li>
+    </ul>
+</div>
+
+<div *ngIf="currentActions">
+    <h4>Actions</h4>
+    <div style="margin-bottom: 12px;" *ngFor="let act of currentActions.actions">
+        <button (click)="doAction(act)">{{act}}</button>
+    </div>
+</div>
