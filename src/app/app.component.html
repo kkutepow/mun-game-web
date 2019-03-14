@@ -5,25 +5,100 @@
 </div>
 
 <div class="list" *ngIf="cookiesAreSet()">
-    <h2>Hi, {{ data }}!</h2>
-    <p>Your enemies:</p>
-    <ul>
-        <li *ngFor="let one of enemies">
+    <h2>Hi, {{ currentPlayerName }}!</h2>
+    <div class="player-panels-wrapper">
+        <div
+            class="player-panel"
+            [ngClass]="one.name === currentPlayerName ? 'your-panel' : ''"
+            *ngFor="let one of enemies"
+        >
             <div>
-                <b>{{ one.name }}</b>
-                <div class="muted-text">
-                    <div *ngFor="let card of one.openHand">
-                        <a style="color:brown;" (click)="showActions(card.availableActions, one.name, card.key)">{{ card.cardName }}</a>
-                    </div>
-                </div>
+                <div class="player-name">{{ one.name }}</div>
+                <table class="card-thumbs-wrapper">
+                    <tbody>
+                        <tr>
+                            <td class="group-name">Close Hand:</td>
+                            <td>
+                                <a
+                                    class="card-thumb"
+                                    *ngFor="let card of one.closeHand"
+                                    (click)="showActions(card.availableActions, one.name, card.key)"
+                                >
+                                    hidden
+                                </a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="group-name">Open Hand:</td>
+                            <td>
+                                <a
+                                    class="card-thumb"
+                                    *ngFor="let card of one.openHand"
+                                    (click)="showActions(card.availableActions, one.name, card.key)"
+                                >
+                                    {{ card.cardName }}
+                                </a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="group-name center-align" colspan="2">
+                                <b>Equipment</b>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="group-name">Head:</td>
+                            <td>
+                                <a
+                                    class="card-thumb"
+                                    *ngFor="let card of one.equipment?.head"
+                                    (click)="showActions(card.availableActions, one.name, card.key)"
+                                >
+                                    {{ card.cardName }}
+                                </a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="group-name">Body:</td>
+                            <td>
+                                <a
+                                    class="card-thumb"
+                                    *ngFor="let card of one.equipment?.body"
+                                    (click)="showActions(card.availableActions, one.name, card.key)"
+                                >
+                                    {{ card.cardName }}
+                                </a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="group-name">Legs:</td>
+                            <td>
+                                <a
+                                    class="card-thumb"
+                                    *ngFor="let card of one.equipment?.legs"
+                                    (click)="showActions(card.availableActions, one.name, card.key)"
+                                >
+                                    {{ card.cardName }}
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
-        </li>
-    </ul>
+        </div>
+    </div>
+
+    <div class="table">
+        <h3>Table</h3>
+        <button class="deck-button">Doors</button>
+        <button class="deck-button">Treasures</button>
+    </div>
 </div>
 
-<div *ngIf="currentActions">
-    <h4>Actions</h4>
-    <div style="margin-bottom: 12px;" *ngFor="let act of currentActions.actions">
-        <button (click)="doAction(act)">{{act}}</button>
+<div class="card-actions-popup" *ngIf="currentActions" (click)="hideActions()">
+    <div class="content" (click)="$event.stopPropagation()">
+        <h4>{{ currentActions.cardId }}</h4>
+        <button class="action-button" *ngFor="let act of currentActions.actions" (click)="doAction(act)">
+            {{ act }}
+        </button>
     </div>
 </div>

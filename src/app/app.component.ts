@@ -12,7 +12,7 @@ export class AppComponent {
     title = 'munchkin-game';
     enemies = [];
     books = [];
-    data = null;
+    currentPlayerName = null;
     name = null;
     currentActions: { actions: any; playerId: any; cardId: any };
 
@@ -20,7 +20,7 @@ export class AppComponent {
 
     ngOnInit() {
         this.game.getPlayers().subscribe(data => {
-            this.data = this.cookies.get('mun-player-name-test');
+            this.currentPlayerName = this.cookies.get('mun-player-name-test');
             this.enemies = Array.isArray(data) && data[0].players;
         });
     }
@@ -32,6 +32,7 @@ export class AppComponent {
 
         this.cookies.set('mun-player-name-test', this.name);
         this.game.addPlayer(this.name);
+        this.currentPlayerName = this.name;
     }
 
     cookiesAreSet() {
@@ -47,14 +48,13 @@ export class AppComponent {
     }
 
     doAction(action) {
-        this.game.doAction(
-            this.currentActions.playerId,
-            this.currentActions.cardId,
-            action,
-        );
+        this.game.doAction(this.currentActions.playerId, this.currentActions.cardId, action);
+        this.hideActions();
     }
 
     hideActions() {
         this.currentActions = null;
     }
+
+    preventClick() {}
 }
