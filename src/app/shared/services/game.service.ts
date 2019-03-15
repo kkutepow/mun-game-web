@@ -9,7 +9,7 @@ import { Observable } from 'rxjs';
 export class GameService {
     ref = null;
     constructor(private db: AngularFireDatabase) {
-        console.log('here:');
+        // console.log('here:');
         // this.db.list('/tables').push(this.table);
     }
 
@@ -24,6 +24,6 @@ export class GameService {
     }
 
     doAction(playerId: any, cardId: any, action: any): any {
-        console.log(`try to do ${action} with ${cardId} by ${playerId}`);
+        // console.log(`try to do ${action} with ${cardId} by ${playerId}`);
     }
 }

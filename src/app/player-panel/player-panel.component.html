@@ -1,0 +1,32 @@
+<div class="player-panel" [ngClass]="player.name === currentPlayerName ? 'your-panel' : ''">
+    <div>
+        <div class="player-name">{{ player.name }}</div>
+        <div class="card-thumbs-wrapper">
+            <app-player-panel-card-stack
+                *ngFor="let cardStack of getHands()"
+                [name]="cardStack.name"
+                [cards]="cardStack.cards"
+                [isHiddenStack]="cardStack.isHiddenStack"
+                (cardOpen)="onCardOpen($event)"
+            ></app-player-panel-card-stack>
+
+            <h4 class="center-align">Equipment</h4>
+            <app-player-panel-card-stack
+                *ngFor="let cardStack of getEquip()"
+                [name]="cardStack.name"
+                [cards]="cardStack.cards"
+                [isHiddenStack]="cardStack.isHiddenStack"
+                (cardOpen)="onCardOpen($event)"
+            ></app-player-panel-card-stack>
+
+            <h4 class="center-align">Curses</h4>
+            <app-player-panel-card-stack
+                *ngFor="let cardStack of getCurses()"
+                [name]="cardStack.name"
+                [cards]="cardStack.cards"
+                [isHiddenStack]="cardStack.isHiddenStack"
+                (cardOpen)="onCardOpen($event)"
+            ></app-player-panel-card-stack>
+        </div>
+    </div>
+</div>

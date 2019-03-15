@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { GameService } from './shared/services/game.service';
 
 import { CookieService } from 'ngx-cookie-service';
+import { Card } from './shared/models/Card';
 
 @Component({
     selector: 'app-root',
@@ -14,7 +15,7 @@ export class AppComponent {
     books = [];
     currentPlayerName = null;
     name = null;
-    currentActions: { actions: any; playerId: any; cardId: any };
+    selectedCard: Card;
 
     constructor(private game: GameService, private cookies: CookieService) {}
 
@@ -27,7 +28,8 @@ export class AppComponent {
 
     register() {
         if (!this.name) {
-            console.log('should be non-empty');
+            // console.log('should be non-empty');
+            return;
         }
 
         this.cookies.set('mun-player-name-test', this.name);
@@ -39,22 +41,12 @@ export class AppComponent {
         return this.cookies.check('mun-player-name-test');
     }
 
-    showActions(actions, playerId, cardId) {
-        this.currentActions = {
-            actions: actions,
-            playerId: playerId,
-            cardId: cardId,
-        };
+    onCardOpen(eventCard: Card) {
+        this.selectedCard = eventCard;
     }
 
-    doAction(action) {
-        this.game.doAction(this.currentActions.playerId, this.currentActions.cardId, action);
-        this.hideActions();
+    onCardDetailsAction(eventAction: string) {
+        this.game.doAction(this.currentPlayerName, this.selectedCard.id, eventAction);
+        this.selectedCard = null;
     }
-
-    hideActions() {
-        this.currentActions = null;
-    }
-
-    preventClick() {}
 }

@@ -23,9 +23,13 @@ button {
 
 .player-panels-wrapper {
     display: flex;
+    width: 100%;
     align-items: stretch;
+    align-content: stretch;
+
     .player-panel {
         padding: 20px 5px;
+        min-width: 200pt;
         background: #ededed;
         margin-right: 10px;
         border-radius: 6px;
@@ -47,23 +51,6 @@ button {
                 font-size: 16px;
                 transform: scale(.75, .8);
             }
-            .card-thumb {
-                border: thin solid #dadde4;
-                color: #dadde4;
-                background: rgb(61, 61, 61);
-                font-size: 14px;
-                padding: 3px 6px;
-                display: inline-block;
-                border-radius: 6px;
-                &:hover {
-                    background: #7194f7;
-                    color: #061233;
-                    border: thin solid #061233;
-                }
-                &:not(:last-child) {
-                    margin-right: 3px;
-                }
-            }
         }
     }
 }
@@ -74,40 +61,42 @@ button {
         width: 120pt;
         height: 160pt;
         margin-right: 30pt;
-        background-image: linear-gradient(#ffcccc -10%, #ffefde 20%, #fffeee, #ffefde 80%, #ffcccc 110% );
+        background-image: linear-gradient(#ffcccc -10%, #ffefde 20%, #fffeee, #ffefde 80%, #ffcccc 110%);
         font-size: 1.5em;
         font-weight: 600;
     }
 }
 
-.card-actions-popup {
-    position: fixed;
-    bottom: 0;
-    top: 0;
-    left: 0;
-    right: 0;
-    background: rgba(0, 0, 0, 0.1);
-    transition: 0.6s;
-    .content {
-        background: white;
-        position: fixed;
-        bottom: 0;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 450pt;
-        padding: 20pt;
-        text-align: center;
-        box-shadow: 0 0 10px #a1a2a7;
-        h4 {
-            font-size: 24px;
-            text-transform: uppercase;
+.card {
+    display: inline-block;
+    position: relative;
+    .card-thumb {
+        border: thin solid #dadde4;
+        color: #dadde4;
+        background: rgb(61, 61, 61);
+        font-size: 14px;
+        padding: 3px 6px;
+        display: inline-block;
+        border-radius: 6px;
+        &:hover {
+            background: #7194f7;
+            color: #061233;
+            border: thin solid #061233;
         }
+        &:not(:last-child) {
+            margin-right: 3px;
+        }
+    }
+    .card-actions {
+        position: absolute;
+        left: 0;
+        z-index: 1;
         .action-button {
-            width: 50%;
-            height: 40px;
+            width: 80px;
+            height: 25px;
             font-weight: 600;
             text-transform: capitalize;
-            font-size: 18px;
+            font-size: 14px;
             color: #7194f7;
             background: white;
             border: thin solid #1c56f7;
@@ -119,7 +108,7 @@ button {
                 border: thin solid #061233;
             }
             box-shadow: 2px 2px 2px 2px #dadde4;
-            margin: 10px auto;
+            margin: 3px 0;
             display: block;
         }
     }

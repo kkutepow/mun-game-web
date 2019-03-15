@@ -2,7 +2,8 @@ import { Card } from './Card';
 import { Player } from './Player';
 
 export class Table {
-    currentTurn: string;
+    id: string;
+    currentTurn: string;s
     players: Player[];
     doors: Card[];
     treasures: Card[];

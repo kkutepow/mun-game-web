@@ -1,7 +1,10 @@
+import { Player } from './Player';
+
 export class Card {
-    cardName: string;
-    key: string;
-    availableActions: string[];
+    id: string;
     isDoor: boolean;
     isEquipment: boolean;
+    cardName: string;
+    availableActions: string[];
+    owner: Player;
 }

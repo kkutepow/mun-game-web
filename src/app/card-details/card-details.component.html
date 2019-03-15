@@ -1,0 +1,5 @@
+<div class="card-actions" *ngIf="card">
+    <button class="action-button" *ngFor="let action of card.availableActions" (click)="doAction(action)">
+        {{ action }}
+    </button>
+</div>
