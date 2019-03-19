@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
 import { Player } from '../shared/models/Player';
-import { Card } from '../shared/models/Card';
+import { Card, CardSlot } from '../shared/models/Card';
 
 @Component({
     selector: 'app-player-panel',
@@ -19,8 +19,8 @@ export class PlayerPanelComponent implements OnInit {
 
     getHands() {
         const cardsOrder = [
-            { name: 'In-Hand', cards: this.player.closeHand, isHiddenStack: true },
-            { name: 'Reserve', cards: this.player.openHand },
+            { name: 'In-Hand', cards: this.player.cards[CardSlot.inHand], isHiddenStack: true },
+            { name: 'Reserve', cards: this.player.cards[CardSlot.inGame] },
         ];
         // console.log("getHands :", cardsOrder);
         return cardsOrder;
@@ -28,17 +28,17 @@ export class PlayerPanelComponent implements OnInit {
 
     getEquip() {
         const cardsOrder = [
-            { name: 'Head', cards: this.player.head },
-            { name: 'Body', cards: this.player.body },
-            { name: 'Legs', cards: this.player.legs },
-            { name: 'Other', cards: this.player.other },
+            { name: 'Head', cards: this.player.cards[CardSlot.head] },
+            { name: 'Body', cards: this.player.cards[CardSlot.body] },
+            { name: 'Legs', cards: this.player.cards[CardSlot.legs] },
+            { name: 'Other', cards: this.player.cards[CardSlot.other] },
         ];
         // console.log("getEquip :", cardsOrder);
         return cardsOrder;
     }
 
     getCurses() {
-        const cardsOrder = [{ name: 'Curses', cards: this.player.curses }];
+        const cardsOrder = [{ name: 'Curses', cards: this.player.cards[CardSlot.curses] }];
         // console.log("getCurses :", cardsOrder);
         return cardsOrder;
     }

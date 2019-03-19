@@ -3,31 +3,40 @@ import { CardAction } from '../CardAction';
 import { Table } from '../Table';
 
 export class CurseLoseALevel extends Card {
-    forClass: 'warrior' | 'cleric' | 'robber' | 'wizard' = null;
-    forRace: 'elf' | 'dwarf' | 'human' | 'halfling' = null;
-    id: 'curse_lose_a_level';
+    id = 'curse_lose_a_level';
+    forClass = null;
+    forRace = null;
     owner = null;
     isDoor: false;
     isBigEquip = false;
     forEquipmentSlot = null;
-    cardName: 'Потеряй уровень';
+    cardName: 'Проклятье: Потеряй уровень';
     actions = {
-        playWithSelf: (table: Table, pid: string, testPermissionMode: boolean) => {
-            return 'Действие не возможно';
-        },
-        playWithCard: (table: Table, pid: string, testPermissionMode: boolean) => {
-            return 'Действие не возможно';
-        },
-        playWithPlayer: (table: Table, pid: string, testPermissionMode: boolean) => {
-            return 'Действие не возможно';
-        },
-        playWithAll: (table: Table, pid: string, testPermissionMode: boolean) => {
-            return 'Действие не возможно';
-        },
+        playWithAll: this.noneFn,
+        playWithCard: this.noneFn,
 
+        equip: this.noneFn,
         discard: this.discardFn,
-        equip: this.equipCardFn,
         putInGame: this.putCardInGameFn,
         sendToPlayer: this.sendToPlayerFn,
+
+        playWithSelf: (table: Table, pid: string, testPermissionMode: boolean) => {
+            const actionFn = () => {
+                let player = table.getPlayer(pid);
+                player.decreaseLevel(1);
+                //update the table
+                table.setPlayer(pid, player);
+            };
+            return this.doBasicValidation(table, pid, false, actionFn);
+        },
+        playWithPlayer: (table: Table, pid: string, targetPid: string, testPermissionMode: boolean) => {
+            const actionFn = () => {
+                let targetPlayer = table.getPlayer(targetPid);
+                targetPlayer.decreaseLevel(1);
+                //update the table
+                table.setPlayer(targetPid, targetPlayer);
+            };
+            return this.doBasicValidation(table, pid, false, actionFn);
+        },
     } as CardAction;
 }

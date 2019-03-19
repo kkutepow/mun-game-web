@@ -62,4 +62,12 @@ export class Player {
             this.cards[slot] = this.cards[slot].filter(c => c.id !== card.id);
         });
     }
+
+    decreaseLevel(count: number) {
+        this.level = Math.max(1, this.level - count);
+    }
+
+    increaseLevel(count: number) {
+        this.level = Math.min(10, this.level + count);
+    }
 }

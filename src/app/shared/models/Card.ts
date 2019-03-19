@@ -129,6 +129,10 @@ export class Card {
         }
     }
 
+    protected noneFn(table: Table, pid: string, testPermissionMode: boolean) {
+        return 'Действие не возможно';
+    }
+
     protected sendToPlayerFn(table: Table, pid: string, targetPid: string, testPermissionMode: boolean) {
         try {
             //validation
@@ -146,6 +150,26 @@ export class Card {
                 //update the table
                 table.setPlayer(pid, player);
                 table.setPlayer(targetPid, targetPlayer);
+            }
+        } catch (err) {
+            return err.message;
+        }
+    }
+
+    protected doBasicValidation(
+        table: Table,
+        pid: string,
+        testPermissionMode: boolean,
+        callback: () => void,
+    ): string {
+        try {
+            //validation
+            this.cardInStack('Карта в сбросе');
+            this.cardIsNotYours(pid, 'Это не ваша карта');
+
+            //action
+            if (!testPermissionMode) {
+                callback();
             }
         } catch (err) {
             return err.message;
