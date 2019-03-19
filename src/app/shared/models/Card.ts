@@ -8,7 +8,7 @@ export class Card {
     forEquipmentSlot: CardSlot;
     forClass: null | 'warrior' | 'cleric' | 'robber' | 'wizard';
     forRace: null | 'elf' | 'dwarf' | 'human' | 'halfling';
-    isBigEquip: boolean;
+    isBigItem: boolean;
     cardName: string;
     actions: CardAction;
     owner: string;
@@ -34,6 +34,15 @@ export class Card {
     public cardUnableToEquipForThisClass(table, pid, message: string = 'Unknown exception'): void {
         let player = table.getPlayer(pid);
         if (this.forClass && !player.hasClass(this.forClass)) {
+            throw message;
+        }
+    }
+
+    public cardUnableSetManyClasses(table, pid, message: string = 'Unknown exception'): void {
+        let player = table.getPlayer(pid);
+        let classesLimit = !player.hasClass('supermunchkin') ? 1 : 0;
+        let classesCount = player.cards[CardSlot.classes].length;
+        if (this.id.indexOf('class_supermunchkin') !== 0 && classesCount > classesLimit) {
             throw message;
         }
     }
@@ -69,7 +78,11 @@ export class Card {
 
             //action
             if (!testPermissionMode) {
+                let player = table.getPlayer(pid);
+                
                 this.owner = null;
+                player.removeCard(this);
+                table.setPlayer(pid, player);
             }
         } catch (err) {
             return err.message;
@@ -107,6 +120,29 @@ export class Card {
         }
     }
 
+    protected setClassFn(table: Table, pid: string, testPermissionMode: boolean) {
+        try {
+            //validation
+            this.cardInStack('Карта в сбросе');
+            this.cardIsNotYours(pid, 'Это не ваша карта');
+            this.cardUnableSetManyClasses(table, pid, 'Нельзя применить несколько классов');
+            this.cardNotInGameOrHand(table, pid, 'Карта уже применена');
+
+            //action
+            if (!testPermissionMode) {
+                let player = table.getPlayer(pid);
+                //drop this card from hand or in-game
+                player.removeCard(this);
+                //put this card to required slot
+                player.putCardInSlot(this, CardSlot.classes);
+                //update the table
+                table.setPlayer(pid, player);
+            }
+        } catch (err) {
+            return err.message;
+        }
+    }
+
     protected putCardInGameFn(table: Table, pid: string, testPermissionMode: boolean) {
         try {
             //validation
@@ -133,6 +169,10 @@ export class Card {
         return 'Действие не возможно';
     }
 
+    protected noneWithTargetFn(table: Table, pid: string, targetPid: string, testPermissionMode: boolean) {
+        return 'Действие не возможно';
+    }
+
     protected sendToPlayerFn(table: Table, pid: string, targetPid: string, testPermissionMode: boolean) {
         try {
             //validation
@@ -146,6 +186,7 @@ export class Card {
                 //drop this card from current player
                 player.removeCard(this);
                 //put this card into target player's hand
+                this.owner = targetPlayer.id;
                 targetPlayer.putCardInSlot(this, CardSlot.inHand);
                 //update the table
                 table.setPlayer(pid, player);
@@ -156,12 +197,7 @@ export class Card {
         }
     }
 
-    protected doBasicValidation(
-        table: Table,
-        pid: string,
-        testPermissionMode: boolean,
-        callback: () => void,
-    ): string {
+    protected doBasicValidation(table: Table, pid: string, testPermissionMode: boolean, callback: () => void): string {
         try {
             //validation
             this.cardInStack('Карта в сбросе');

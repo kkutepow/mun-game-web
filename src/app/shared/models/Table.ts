@@ -27,4 +27,17 @@ export class Table {
             throw `Player with pid=${pid} not found`;
         }
     }
+
+    public doRequest(pid: string, cards: Card[], count: number): Promise<Card[]> {
+        return new Promise<Card[]>((resolve, reject) => {
+            let selectedCards: Card[] = [];
+            while (Math.min(cards.length, count) > 0) {
+                const cardIndex = Math.round(Math.random() * (cards.length - 1));
+                selectedCards.push(cards[cardIndex]);
+                cards.splice(cardIndex, 1);
+                --count;
+            }
+            resolve(selectedCards);
+        });
+    }
 }

@@ -31,11 +31,11 @@ export class Player {
     }
 
     public hasClass(className: string): boolean {
-        return this.cards[CardSlot.classes].findIndex(c => c.cardName.toLowerCase() === className.toLowerCase()) >= 0;
+        return this.cards[CardSlot.classes].findIndex(c => c.id.indexOf('class_' + className.toLowerCase()) === 0) >= 0;
     }
 
     public hasRace(raceName: string): boolean {
-        return this.cards[CardSlot.races].findIndex(c => c.cardName.toLowerCase() === raceName.toLowerCase()) >= 0;
+        return this.cards[CardSlot.races].findIndex(c => c.id.indexOf('class_' + raceName.toLowerCase()) === 0) >= 0;
     }
 
     putCardInSlot(card: Card, slot: CardSlot): void {
