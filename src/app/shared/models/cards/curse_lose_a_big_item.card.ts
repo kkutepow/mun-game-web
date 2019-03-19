@@ -10,7 +10,7 @@ export class CurseLoseABigItem extends Card {
     isDoor: true;
     isBigItem = false;
     forEquipmentSlot = null;
-    cardName: 'Проклятье: Потеряй уровень';
+    cardName: 'Проклятье: Потеряй большую шмотку';
     actions = {
         playWithAll: this.noneFn,
         playWithCard: this.noneFn,
