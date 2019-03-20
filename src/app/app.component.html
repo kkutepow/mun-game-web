@@ -1,28 +1,45 @@
 <!-- ToDo: move to separate component "sign-in form" -->
-<div class="form" *ngIf="!cookiesAreSet()">
-    <p>Enter your name please:</p>
-    <input type="text" [(ngModel)]="name" required />
-    <button (click)="register()">Confirm</button>
+<div class="form" *ngIf="!this.tables || !this.tables.length">
+    <h4>There is no table in database.</h4>
+    <p>Try to create a random one.</p>
+    <button (click)="addNewTable()">Add new table</button>
 </div>
 
-<!-- Game client -->
-<div class="game-client" *ngIf="cookiesAreSet()">
-    <div class="player-panels-wrapper">
-        <!-- Players -->
-        <app-player-panel
-            *ngFor="let player of enemies"
-            [player]="player"
-            (cardOpen)="onCardOpen($event)"
-        ></app-player-panel>
+<div *ngIf="this.tables && this.tables.length">
+    <!-- ToDo: move to separate component "sign-in form" -->
+    <div class="form" *ngIf="!cookiesAreSet()">
+        <p>Enter your name please:</p>
+        <input type="text" [(ngModel)]="name" required />
+        <button (click)="register()">Confirm</button>
     </div>
 
-    <!-- Card details panel -->
-    <app-card-details
-        [card]="selectedCard"
-        (action)="onCardDetailsAction($event)"
-        (close)="selectedCard = null"
-    ></app-card-details>
+    <div *ngIf="cookiesAreSet()">
+        <div class="config-panel">
+            <div class="user-name">
+                {{ this.currentUser.name }}
+            </div>
+        </div>
 
-    <!-- Game Table -->
-    <app-table></app-table>
+        <!-- Game client -->
+        <div class="game-client">
+            <div class="player-panels-wrapper">
+                <!-- Players -->
+                <app-player-panel
+                    *ngFor="let player of enemies"
+                    [player]="player"
+                    (cardOpen)="onCardOpen($event)"
+                ></app-player-panel>
+            </div>
+
+            <!-- Card details panel -->
+            <app-card-details
+                [card]="selectedCard"
+                (action)="onCardDetailsAction($event)"
+                (close)="selectedCard = null"
+            ></app-card-details>
+
+            <!-- Game Table -->
+            <app-table></app-table>
+        </div>
+    </div>
 </div>

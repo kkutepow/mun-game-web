@@ -1,4 +1,4 @@
-import { Card, CardSlot } from './Card';
+import { Card, CardSlot, Class, Race } from './Card';
 
 export class Player {
     id: string;
@@ -30,12 +30,12 @@ export class Player {
         return this.cards[slot].findIndex((c: Card) => c.id === card.id);
     }
 
-    public hasClass(className: string): boolean {
-        return this.cards[CardSlot.classes].findIndex(c => c.id.indexOf('class_' + className.toLowerCase()) === 0) >= 0;
+    public hasClass(_class: Class): boolean {
+        return !!this.cards[CardSlot.classes].find((card: Card) => card.classCard === _class);
     }
 
-    public hasRace(raceName: string): boolean {
-        return this.cards[CardSlot.races].findIndex(c => c.id.indexOf('class_' + raceName.toLowerCase()) === 0) >= 0;
+    public hasRace(race: Race): boolean {
+        return !!this.cards[CardSlot.races].find((card: Card) => card.raceCard === race);
     }
 
     putCardInSlot(card: Card, slot: CardSlot): void {

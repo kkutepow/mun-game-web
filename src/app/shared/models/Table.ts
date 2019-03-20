@@ -16,15 +16,15 @@ export class Table {
         return player;
     }
 
-    public setPlayer(pid: string, changed: Player): void {
+    public updatePlayer(changed: Player): void {
         let exists = false;
         this.players = this.players.map(p => {
-            exists = exists || p.id === pid;
-            return p.id === pid ? changed : p;
+            exists = exists || p.id === changed.id;
+            return p.id === changed.id ? changed : p;
         });
 
         if (!exists) {
-            throw `Player with pid=${pid} not found`;
+            throw `Player with pid=${changed.id} not found`;
         }
     }
 

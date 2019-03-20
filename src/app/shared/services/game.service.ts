@@ -1,29 +1,71 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnInit } from '@angular/core';
 
-import { AngularFireDatabase, AngularFireList } from 'angularfire2/database';
+import { AngularFireDatabase } from 'angularfire2/database';
 import { Observable } from 'rxjs';
+import { Table } from '../models/Table';
+import { GameData } from '../data/gameData';
+import { Player } from '../models/Player';
 
 @Injectable({
     providedIn: 'root',
 })
-export class GameService {
+export class GameService implements OnInit {
     ref = null;
+
+    tableExample = new Table();
+
     constructor(private db: AngularFireDatabase) {
-        // console.log('here:');
-        // this.db.list('/tables').push(this.table);
+        this.ref = this.db.list('/tables');
+        console.log("here", GameData.getAllDoors());
+
+        this.tableExample.doors = GameData.getAllDoors();
+        this.tableExample.treasures = GameData.getAllTreasures();
+        this.tableExample.currentTurn = 'p1';
+        this.tableExample.players = [
+            //player one
+            {
+                id: 'p1',
+                level: 1,
+                gender: 'm',
+                name: 'Player1',
+                cards: {},
+            } as Player,
+            //player two
+            {
+                id: 'p2',
+                level: 1,
+                gender: 'm',
+                name: 'Player2',
+                cards: {},
+            } as Player,
+            //player three
+            {
+                id: 'p3',
+                level: 1,
+                gender: 'f',
+                name: 'Player3',
+                cards: {},
+            } as Player,
+        ];
     }
 
-    ngOnInit() {}
-
-    getPlayers(): Observable<any> {
-        return this.db.list('/tables').valueChanges();
+    ngOnInit() {
     }
 
-    addPlayer(data): void {
-        // this.db.list('/tables').push(this.table);
+    getTables(): Observable<any> {
+        console.log('yo2', this.ref);
+        return this.ref.valueChanges();
     }
 
-    doAction(playerId: any, cardId: any, action: any): any {
-        // console.log(`try to do ${action} with ${cardId} by ${playerId}`);
+    addTable(table?: Table): void {
+        this.ref.push(table ? table : this.tableExample);
+    }
+
+    updateTable(key: string, table: Table) {
+        this.ref.update(key, table);
+    }
+
+    removeAllTables() {
+        this.ref.remove();
     }
 }

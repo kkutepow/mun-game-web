@@ -1,13 +1,54 @@
-import { Table } from './Table';
+import { Card } from './Card';
+import { Player } from './Player';
 
-export class CardAction {
-    playWithSelf: (table: Table, pid: string, testPermissionMode: boolean) => string;
-    playWithCard: (table: Table, pid: string, testPermissionMode: boolean) => string;
-    playWithPlayer: (table: Table, pid: string, targetPid: string, testPermissionMode: boolean) => string;
-    playWithAll: (table: Table, pid: string, testPermissionMode: boolean) => string;
+export abstract class BasicCardAction {
+    //Playing card
+    protected card: Card;
+    //Initiator of card play
+    protected player: Player;
+    //Optional target for card play
+    protected target: Player;
 
-    discard: (table: Table, pid: string, testPermissionMode: boolean) => string;
-    equip: (table: Table, pid: string, testPermissionMode: boolean) => string;
-    putInGame: (table: Table, pid: string, testPermissionMode: boolean) => string;
-    sendToPlayer: (table: Table, pid: string, targetPid: string, testPermissionMode: boolean) => string;
+    //contains the last error message occurs during last execution
+    public lastError: string;
+
+    //initialize of new action within required subjectives
+    constructor(card: Card, player: Player, target?: Player) {
+        this.card = card;
+        this.player = player;
+        this.target = target;
+    }
+
+    // contains
+    abstract validations: ((card: Card, player: Player, target: Player) => void)[];
+    abstract action: () => void;
+
+    // wrapper method to do validation
+    validate() {
+        try {
+            this.validations.forEach(validation => validation(this.card, this.player, this.target));
+            return true;
+        } catch (err) {
+            this.lastError = err.message;
+            return false;
+        }
+    }
+
+    // wrapper method to do action
+    execute() {
+        if (this.validate()) {
+            this.action();
+        }
+    }
+}
+
+export enum CardAction {
+    playWithSelf,
+    playWithCard,
+    playWithPlayer,
+    playWithAll,
+    discard,
+    equip,
+    putInGame,
+    sendToPlayer,
 }
