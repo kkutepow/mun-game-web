@@ -20,9 +20,27 @@ export class CardActionValidator {
         }
     }
 
+    static cardShouldHaveClassMeaning(card: Card, player: Player, target: Player): void {
+        if (!card.classCard) {
+            throw `Карта не может быть использована как класс`;
+        }
+    }
+
+    static cardShouldHaveRaceMeaning(card: Card, player: Player, target: Player): void {
+        if (!card.raceCard) {
+            throw `Карта не может быть использована как раса`;
+        }
+    }
+
     static cardShouldBeCompatibleWithClass(card: Card, player: Player, target: Player): void {
         if (card.requiredClass && !player.hasClass(card.requiredClass)) {
             throw `Карта может быть использована только классом "${card.requiredClass}"`;
+        }
+    }
+
+    static cardShouldBeCompatibleWithRace(card: Card, player: Player, target: Player): void {
+        if (card.requiredRace && !player.hasRace(card.requiredRace)) {
+            throw `Карта может быть использована только расой "${card.requiredRace}"`;
         }
     }
 
@@ -65,7 +83,7 @@ export class CardActionValidator {
         }
     }
 
-    static cardNotInHand(card: Card, player: Player, target: Player): void {
+    static cardShouldBeInHand(card: Card, player: Player, target: Player): void {
         let cardSlot = player.findCardPlace(card);
         if (cardSlot !== CardSlot.inHand) {
             throw 'Карта должна быть в руках';
