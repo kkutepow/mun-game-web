@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
 import { Player } from '../shared/models/Player';
 import { Card, CardSlot } from '../shared/models/Card';
+import { GameService } from '../shared/services/game.service';
 
 @Component({
     selector: 'app-player-panel',
@@ -9,21 +10,25 @@ import { Card, CardSlot } from '../shared/models/Card';
 })
 export class PlayerPanelComponent implements OnInit {
     @Input() player: Player;
+    @Input() cards: Card[];
     @Output() cardOpen: EventEmitter<Card> = new EventEmitter();
 
-    constructor() {}
+    constructor(private game: GameService) {}
 
     ngOnInit() {
         // console.info('player-panel fetched');
     }
 
-    getHands() {
-        const cardsOrder = [
-            { name: 'In-Hand', cards: this.player.cards[CardSlot.inHand], isHiddenStack: true },
-            { name: 'Reserve', cards: this.player.cards[CardSlot.inGame] },
-        ];
-        // console.log("getHands :", cardsOrder);
-        return cardsOrder;
+    getCardsInHand() {
+        
+        return this.cards.filter(card => card.currentSlot === CardSlot.inHand);
+
+        // const cardsOrder = [
+        //     { name: 'In-Hand', cards: this.player.cards[CardSlot.inHand], isHiddenStack: true },
+        //     { name: 'Reserve', cards: this.player.cards[CardSlot.inGame] },
+        // ];
+        // // console.log("getHands :", cardsOrder);
+        // return cardsOrder;
     }
 
     getEquip() {

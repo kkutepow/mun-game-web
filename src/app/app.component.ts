@@ -5,6 +5,8 @@ import { CookieService } from 'ngx-cookie-service';
 import { Card } from './shared/models/Card';
 import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
+import { Player } from './shared/models/Player';
+import { Table } from './shared/models/Table';
 
 @Component({
     selector: 'app-root',
@@ -13,49 +15,48 @@ import { Observable } from 'rxjs';
 })
 export class AppComponent implements OnInit {
     title = 'munchkin-game';
-    enemies = [];
     books = [];
     currentPlayerName = null;
     name = null;
     selectedCard: Card;
-    tables: Observable<any[]>;
+    table: Table;
+    player: Player;
 
     constructor(private game: GameService, private cookies: CookieService) {
-        console.log('yo', this.tables);
         this.game.getTables().subscribe(tables => {
             console.log('tables', tables);
-            this.tables = tables;
+            this.table = tables[0];
+            if (this.cookies.check('mun-player-id-test')) {
+                const pid = this.cookies.get('mun-player-id-test');
+                this.player = this.table.players.find(p => p.id === pid);
+            }
         });
-        console.log('yo1', this.tables);
     }
 
     ngOnInit() {}
 
-    get table() {
-        return this.tables[0].value;
+    enemies() {
+        return this.table.players.filter(p => p.id !== this.player.id);
     }
 
-    get tableKey() {
-        return this.tables[0].key;
+    getCards() {
+        let doors = !this.table.doors ? [] : this.table.doors.filter(card => card.owner === this.player.id);
+        let treasures = !this.table.treasures ? [] : this.table.treasures.filter(card => card.owner === this.player.id);
+        console.log("tablblblb", doors.concat(treasures))
+        return doors.concat(treasures);
     }
 
     addNewTable() {
         this.game.addTable();
     }
 
-    register() {
-        if (!this.name) {
-            // console.log('should be non-empty');
-            return;
-        }
-
-        this.cookies.set('mun-player-name-test', this.name);
-        this.game.addTable(this.name);
-        this.currentPlayerName = this.name;
+    register(player: Player) {
+        this.player = player;
+        this.cookies.set('mun-player-id-test', player.id);
     }
 
     cookiesAreSet() {
-        return this.cookies.check('mun-player-test1');
+        return this.cookies.check('mun-player-id-test');
     }
 
     onCardOpen(eventCard: Card) {
@@ -65,5 +66,9 @@ export class AppComponent implements OnInit {
     onCardDetailsAction(eventAction: string) {
         // this.game.doAction(this.currentPlayerName, this.selectedCard.id, eventAction);
         // this.selectedCard = null;
+    }
+
+    yourTurn () {
+        return this.player.id === this.table.currentTurn;
     }
 }

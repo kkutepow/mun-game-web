@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { Table } from '../models/Table';
 import { GameData } from '../data/gameData';
 import { Player } from '../models/Player';
+import { CardSlot } from '../models/Card';
 
 @Injectable({
     providedIn: 'root',
