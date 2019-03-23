@@ -55,7 +55,7 @@ export class GameService implements OnInit {
 
     getTables(): Observable<any> {
         console.log('yo2', this.ref);
-        return this.ref.valueChanges();
+        return this.ref.snapshotChanges();
     }
 
     addTable(table?: Table): void {

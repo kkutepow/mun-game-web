@@ -5,11 +5,17 @@ import { ClassWarrior1 } from '../models/cards/class_warrior.card';
 import { CurseLoseABigItem } from '../models/cards/curse_lose_a_big_item.card';
 import { CurseLoseALevel } from '../models/cards/curse_lose_a_level.card';
 import { Player } from '../models/Player';
+import { DiscardAction } from '../models/actions/discard.action';
 
 export class GameData {
+    static actions : any = {
+        "DiscardAction" : DiscardAction
+    }
+
     constructor () {
         console.log('yogame data');
     }
+
     static getAllDoors(): any {
         return Object.values(this.deck)
             .map(x => x.card)
@@ -37,7 +43,7 @@ export class GameData {
 
     static doAction(actionName: string, card: Card, player: Player, target: Player) {
         let action = this.deck[card.id].actions[actionName];
-        return window[action](card, player, target).execute();
+        return (new this.actions[action](card, player, target)).execute();
     }
 
     static deck: { [cardId: string]: { card: Card; actions: { [action: string]: string } } } = {

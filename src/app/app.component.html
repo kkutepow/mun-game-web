@@ -17,11 +17,8 @@
             <div class="flex-container">
                 <div class="container">
                     <div class="text-label">Current turn:</div>
-                    <div
-                        class="user-name"
-                        *ngFor="let player of table.players"
-                        [ngClass]="player.id === table.currentTurn ? 'selected' : ''"
-                    >
+                    <div class="user-name" *ngFor="let player of table.players"
+                        [ngClass]="player.id === table.currentTurn ? 'selected' : ''">
                         {{ player.name }}
                     </div>
 
@@ -37,17 +34,18 @@
                     <div class="user-name">
                         {{ player.gender | uppercase }}
                     </div>
+                    <div class="text-label">Table key:</div>
+                    <div class="user-name">
+                        {{ tableKey }}
+                    </div>
                 </div>
             </div>
         </div>
 
         <!-- Game client -->
         <div class="game-client">
-            <app-player-panel
-                [player]="player"
-                [cards]="getCards(player)"
-                (cardOpen)="onCardOpen($event)"
-            ></app-player-panel>
+            <app-player-panel [player]="player" [cards]="getCards(player)" (cardOpen)="onCardOpen($event)">
+            </app-player-panel>
 
             <div class="player-panels-wrapper">
                 <!-- Players -->
@@ -60,17 +58,20 @@
             </div>
 
             <!-- Card details panel -->
-            <app-card-details
+            <!-- <app-card-details
                 [card]="selectedCard"
                 (action)="onCardDetailsAction($event)"
                 (close)="selectedCard = null"
-            ></app-card-details>
+            ></app-card-details> -->
 
             <!-- Game Table -->
             <!-- <app-table></app-table> -->
 
             <div class="table" *ngIf="yourTurn()">
-                <button class="deck-button">Doors</button>
+                <button class="deck-button" (click)="openTheDoor()">
+                    Doors
+                    <div class="small-font" *ngFor="let card of doors()">{{ card.cardName }}</div>
+                </button>
                 <button class="deck-button">Treasures</button>
             </div>
         </div>

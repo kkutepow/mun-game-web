@@ -16,7 +16,7 @@ export class PlayerPanelCardStackComponent implements OnInit {
     constructor() {}
 
     ngOnInit() {
-        // console.info('player-panel-card-stack fetched');
+        console.info('player-panel-card-stack fetched', this.cards);
     }
 
     onCardOpen(evt) {

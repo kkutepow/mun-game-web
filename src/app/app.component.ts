@@ -2,11 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { GameService } from './shared/services/game.service';
 
 import { CookieService } from 'ngx-cookie-service';
-import { Card } from './shared/models/Card';
+import { Card, CardSlot } from './shared/models/Card';
 import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { Player } from './shared/models/Player';
 import { Table } from './shared/models/Table';
+import { GameData } from './shared/data/gameData';
 
 @Component({
     selector: 'app-root',
@@ -15,17 +16,19 @@ import { Table } from './shared/models/Table';
 })
 export class AppComponent implements OnInit {
     title = 'munchkin-game';
-    books = [];
     currentPlayerName = null;
-    name = null;
-    selectedCard: Card;
     table: Table;
     player: Player;
+    tableKey: string;
 
     constructor(private game: GameService, private cookies: CookieService) {
         this.game.getTables().subscribe(tables => {
             console.log('tables', tables);
-            this.table = tables[0];
+            console.log('table', tables[0].payload.val());
+            this.tableKey = tables[0].payload.key;
+            this.table = tables[0].payload.val();
+            // this.table.doors.forEach(x => x.owner = null);
+            // this.game.updateTable(this.tableKey, this.table);
             if (this.cookies.check('mun-player-id-test')) {
                 const pid = this.cookies.get('mun-player-id-test');
                 this.player = this.table.players.find(p => p.id === pid);
@@ -40,9 +43,15 @@ export class AppComponent implements OnInit {
     }
 
     getCards() {
-        let doors = !this.table.doors ? [] : this.table.doors.filter(card => card.owner === this.player.id);
-        let treasures = !this.table.treasures ? [] : this.table.treasures.filter(card => card.owner === this.player.id);
-        console.log("tablblblb", doors.concat(treasures))
+        let doors = !this.table.doors
+            ? []
+            : this.table.doors.filter(card => card.owner === this.player.id);
+        let treasures = !this.table.treasures
+            ? []
+            : this.table.treasures.filter(
+                  card => card.owner === this.player.id,
+              );
+        console.log('tablblblb', doors.concat(treasures));
         return doors.concat(treasures);
     }
 
@@ -60,7 +69,8 @@ export class AppComponent implements OnInit {
     }
 
     onCardOpen(eventCard: Card) {
-        this.selectedCard = eventCard;
+        GameData.doAction("discard", eventCard, this.player, null);
+        this.game.updateTable(this.tableKey, this.table);
     }
 
     onCardDetailsAction(eventAction: string) {
@@ -68,7 +78,29 @@ export class AppComponent implements OnInit {
         // this.selectedCard = null;
     }
 
-    yourTurn () {
+    yourTurn() {
         return this.player.id === this.table.currentTurn;
+    }
+
+    openTheDoor() {
+        if (this.table.doors.length) {
+            let card = this.table.doors.find(c => !c.owner);
+            card.owner = this.player.id;
+            card.currentSlot = CardSlot.inHand;
+        }
+        this.changeTheTurn();
+    }
+
+    doors() {
+        return this.table.doors.filter(c => !c.owner);
+    }
+
+    changeTheTurn() {
+        let prevIndex = this.table.players.findIndex(
+            p => p.id === this.table.currentTurn,
+        );
+        const newIndex = ++prevIndex % this.table.players.length;
+        this.table.currentTurn = this.table.players[newIndex].id;
+        this.game.updateTable(this.tableKey, this.table);
     }
 }

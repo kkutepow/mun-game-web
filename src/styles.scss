@@ -30,6 +30,10 @@ button {
     color: #a1a2a7;
 }
 
+.small-font {
+    font-size: .2em;
+}
+
 .player-panel {
     border: solid thin #dadde4;
     border-radius: 10pt;
@@ -52,20 +56,20 @@ button {
     display: inline-block;
     position: relative;
     .card-thumb {
-        border: thin solid #dadde4;
-        color: #dadde4;
-        background: rgb(61, 61, 61);
+        // border: thin solid #dadde4;
+        // color: #dadde4;
+        // background: rgb(61, 61, 61);
         font-size: 14px;
-        padding: 3px 6px;
+        padding: 3px 3px 0 3px ;
         display: inline-block;
-        border-radius: 6px;
-        &:hover {
-            background: #7194f7;
-            color: #061233;
-            border: thin solid #061233;
-        }
-        &:not(:last-child) {
-            margin-right: 3px;
+        img {
+            width: 100pt;
+            height: 140pt;
+            transition: .5s;
+            transform-origin: 0 0;
+            &:hover {
+                transform: scale(1.8);
+            }
         }
     }
     .card-actions {
