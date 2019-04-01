@@ -9,7 +9,6 @@ body {
     margin: 30pt auto;
     max-width: 900pt;
     width: 90%;
-
     font-family: Roboto, 'Helvetica Neue', sans-serif;
 }
 
@@ -60,15 +59,15 @@ button {
         // color: #dadde4;
         // background: rgb(61, 61, 61);
         font-size: 14px;
-        padding: 3px 3px 0 3px ;
+        padding: 3px 3px 0 3px;
         display: inline-block;
         img {
             width: 100pt;
             height: 140pt;
-            transition: .5s;
+            transition: .2s;
             transform-origin: 0 0;
             &:hover {
-                transform: scale(1.8);
+                transform: scale(1.1);
             }
         }
     }
@@ -123,7 +122,7 @@ button {
                 transform: scaleY(.8);
             }
             .user-name {
-                text-align: center;                
+                text-align: center;
                 color: yellow;
                 &.selected {
                     color: red;
@@ -147,4 +146,31 @@ button {
     max-width: 1200pt;
     width: 90%;
     margin: 0 auto;
+}
+
+.card-actions {
+    position: fixed;
+    bottom: 0;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 5;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background: rgba(255, 255, 255, .9);
+    align-items: center;
+    a.card-action {
+        background: white;
+        border-radius: 20px;
+        display: block;
+        margin: 20px auto;
+        font-size: 20px;
+        text-transform: uppercase;
+        font-weight: 600;
+        padding: 20px 50px;
+        width: 100px;
+        text-align: center;
+        box-shadow: 0 0 25px -5px #888;
+    }
 }

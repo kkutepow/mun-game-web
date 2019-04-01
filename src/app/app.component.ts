@@ -20,11 +20,11 @@ export class AppComponent implements OnInit {
     table: Table;
     player: Player;
     tableKey: string;
+    cardActions: string[];
+    selectedCard: Card;
 
     constructor(private game: GameService, private cookies: CookieService) {
         this.game.getTables().subscribe(tables => {
-            console.log('tables', tables);
-            console.log('table', tables[0].payload.val());
             this.tableKey = tables[0].payload.key;
             this.table = tables[0].payload.val();
             // this.table.doors.forEach(x => x.owner = null);
@@ -51,7 +51,6 @@ export class AppComponent implements OnInit {
             : this.table.treasures.filter(
                   card => card.owner === this.player.id,
               );
-        console.log('tablblblb', doors.concat(treasures));
         return doors.concat(treasures);
     }
 
@@ -69,13 +68,25 @@ export class AppComponent implements OnInit {
     }
 
     onCardOpen(eventCard: Card) {
-        GameData.doAction("discard", eventCard, this.player, null);
-        this.game.updateTable(this.tableKey, this.table);
+        let actions = GameData.getAvailableActions(this.table, eventCard, this.player, null);
+        this.cardActions = actions;
+        this.selectedCard = eventCard;
+        // console.log("onCardOpen", actions);
     }
 
     onCardDetailsAction(eventAction: string) {
         // this.game.doAction(this.currentPlayerName, this.selectedCard.id, eventAction);
         // this.selectedCard = null;
+    }
+
+    doCardAction(actionName: string) {
+        GameData.doAction(actionName, this.table, this.selectedCard, this.player, null);
+        this.game.updateTable(this.tableKey, this.table);
+        this.cardActions = null;
+    }
+
+    CancelAction() {
+        this.cardActions = null;
     }
 
     yourTurn() {

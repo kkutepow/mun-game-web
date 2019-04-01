@@ -1,5 +1,3 @@
 <div class="group-name">
-    {{ name }}:
-    <app-card *ngFor="let card of cards" [card]="card" [isHidden]="isHiddenStack" (open)="onCardOpen($event)">
-    </app-card>
+    <app-card *ngFor="let card of cards" [card]="card" [isHidden]="isHiddenStack" (open)="onCardOpen($event)"></app-card>
 </div>

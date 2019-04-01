@@ -5,6 +5,10 @@
     <button (click)="addNewTable()">Add new table</button>
 </div>
 
+<div class="card-actions" *ngIf="cardActions" (click)="CancelAction()">
+    <a class="card-action" *ngFor="let actionName of cardActions" (click)="doCardAction(actionName); $event.stopPropagation()">{{actionName}}</a>    
+</div>
+
 <div *ngIf="table">
     <!-- ToDo: move to separate component "sign-in form" -->
     <div class="form" *ngIf="!cookiesAreSet()">

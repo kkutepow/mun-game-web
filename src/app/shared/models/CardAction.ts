@@ -1,9 +1,12 @@
 import { Card } from './Card';
 import { Player } from './Player';
+import { Table } from './Table';
 
 export abstract class BasicCardAction {
     //Playing card
     protected card: Card;
+    //The game context
+    protected context: Table;
     //Initiator of card play
     protected player: Player;
     //Optional target for card play
@@ -13,20 +16,21 @@ export abstract class BasicCardAction {
     public lastError: string;
 
     //initialize of new action within required subjectives
-    constructor(card: Card, player: Player, target?: Player) {
+    constructor(context: Table, card: Card, player: Player, target?: Player) {
         this.card = card;
+        this.context = context;
         this.player = player;
         this.target = target;
     }
 
     // contains
-    abstract validations: ((card: Card, player: Player, target: Player) => void)[];
+    abstract validations: ((context: Table, card: Card, player: Player, target: Player) => void)[];
     abstract action: () => void;
 
     // wrapper method to do validation
     validate() {
         try {
-            this.validations.forEach(validation => validation(this.card, this.player, this.target));
+            this.validations.forEach(validation => validation(this.context, this.card, this.player, this.target));
             return true;
         } catch (err) {
             this.lastError = err.message;

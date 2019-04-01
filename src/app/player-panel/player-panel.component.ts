@@ -20,15 +20,7 @@ export class PlayerPanelComponent implements OnInit {
     }
 
     getCardsInHand() {
-        
         return this.cards.filter(card => card.currentSlot === CardSlot.inHand);
-
-        // const cardsOrder = [
-        //     { name: 'In-Hand', cards: this.player.cards[CardSlot.inHand], isHiddenStack: true },
-        //     { name: 'Reserve', cards: this.player.cards[CardSlot.inGame] },
-        // ];
-        // // console.log("getHands :", cardsOrder);
-        // return cardsOrder;
     }
 
     getEquip() {
@@ -40,6 +32,10 @@ export class PlayerPanelComponent implements OnInit {
         ];
         // console.log("getEquip :", cardsOrder);
         return cardsOrder;
+    }
+
+    getClasses() {
+        return this.cards.filter(card => card.currentSlot === CardSlot.classes);
     }
 
     getCurses() {

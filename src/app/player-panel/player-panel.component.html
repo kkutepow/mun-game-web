@@ -8,4 +8,11 @@
 
     <div class="header">Cards In-Game</div>
     <div class="header">Equipment</div>
+
+    <div class="header">Classes</div>
+    
+    <app-player-panel-card-stack
+        [cards]="getClasses()"
+        (cardOpen)="onCardOpen($event)"
+    ></app-player-panel-card-stack>
 </div>

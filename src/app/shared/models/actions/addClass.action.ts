@@ -6,6 +6,7 @@ export class AddClassAction extends BasicCardAction {
     validations = [
         validator.cardShouldHaveOwner,
         validator.cardShouldBeUsedOnlyByOwner,
+        validator.cardShouldBeInHandOrGame,
         validator.cardShouldHaveClassMeaning,
         validator.userShouldBeReadyForClass,
     ];

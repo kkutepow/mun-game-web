@@ -17,7 +17,6 @@ export class GameService implements OnInit {
 
     constructor(private db: AngularFireDatabase) {
         this.ref = this.db.list('/tables');
-        console.log("here", GameData.getAllDoors());
 
         this.tableExample.doors = GameData.getAllDoors();
         this.tableExample.treasures = GameData.getAllTreasures();
@@ -54,7 +53,6 @@ export class GameService implements OnInit {
     }
 
     getTables(): Observable<any> {
-        console.log('yo2', this.ref);
         return this.ref.snapshotChanges();
     }
 

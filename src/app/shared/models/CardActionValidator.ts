@@ -1,92 +1,95 @@
 import { Card, CardSlot, Class, Race } from './Card';
 import { Player } from './Player';
+import { Table } from './Table';
+import { GameData } from '../data/gameData';
 
 export class CardActionValidator {
-    static cardShouldHaveOwner(card: Card, player: Player, target: Player): void {
+    static cardShouldHaveOwner(context: Table, card: Card, player: Player, target: Player): void {
         if (!card.owner) {
-            throw `У карты нет владельца`;
+            throw new Error(`У карты нет владельца`);
         }
     }
 
-    static cardShouldBeEquipment(card: Card, player: Player, target: Player): void {
+    static cardShouldBeEquipment(context: Table, card: Card, player: Player, target: Player): void {
         if (!card.requiredSlot) {
-            throw `Карта не может быть надета`;
+            throw new Error(`Карта не может быть надета`);
         }
     }
 
-    static cardShouldBeUsedOnlyByOwner(card: Card, player: Player, target: Player): void {
+    static cardShouldBeUsedOnlyByOwner(context: Table, card: Card, player: Player, target: Player): void {
         if (card.owner !== player.id) {
-            throw `Карта не может быть использована вами`;
+            throw new Error(`Карта не может быть использована вами`);
         }
     }
 
-    static cardShouldHaveClassMeaning(card: Card, player: Player, target: Player): void {
+    static cardShouldHaveClassMeaning(context: Table, card: Card, player: Player, target: Player): void {
         if (!card.classCard) {
-            throw `Карта не может быть использована как класс`;
+            throw new Error(`Карта не может быть использована как класс`);
         }
     }
 
-    static cardShouldHaveRaceMeaning(card: Card, player: Player, target: Player): void {
+    static cardShouldHaveRaceMeaning(context: Table, card: Card, player: Player, target: Player): void {
         if (!card.raceCard) {
-            throw `Карта не может быть использована как раса`;
+            throw new Error(`Карта не может быть использована как раса`);
         }
     }
 
-    static cardShouldBeCompatibleWithClass(card: Card, player: Player, target: Player): void {
-        if (card.requiredClass && !player.hasClass(card.requiredClass)) {
-            throw `Карта может быть использована только классом "${card.requiredClass}"`;
+    static cardShouldBeCompatibleWithClass(context: Table, card: Card, player: Player, target: Player): void {
+        if (card.requiredClass && !Player.hasClass(player, card.requiredClass)) {
+            throw new Error(`Карта может быть использована только классом "${card.requiredClass}"`);
         }
     }
 
-    static cardShouldBeCompatibleWithRace(card: Card, player: Player, target: Player): void {
-        if (card.requiredRace && !player.hasRace(card.requiredRace)) {
-            throw `Карта может быть использована только расой "${card.requiredRace}"`;
+    static cardShouldBeCompatibleWithRace(context: Table, card: Card, player: Player, target: Player): void {
+        if (card.requiredRace && !Player.hasRace(player, card.requiredRace)) {
+            throw new Error(`Карта может быть использована только расой "${card.requiredRace}"`);
         }
     }
 
-    static userShouldBeReadyForClass(card: Card, player: Player, target: Player): void {
-        if (player.hasClass(card.classCard)) {
-            throw `У вас уже есть этот класс`;
+    static userShouldBeReadyForClass(context: Table, card: Card, player: Player, target: Player): void {
+        let playerClasses =  GameData.getPlayerCards(context, player).filter(card => card.currentSlot === CardSlot.classes);
+        if (playerClasses.some(c => c.classCard === card.classCard)) {
+            throw new Error(`У вас уже есть этот класс`);
         }
 
         if (card.classCard === Class.supermunchkin) {
             return;
         }
 
-        let classesLimit = !player.hasClass(Class.supermunchkin) ? 1 : 0;
-        let classesCount = player.cards[CardSlot.classes].length;
-        if (classesCount > classesLimit) {
-            throw `Вы не можете приобрести новый класс`;
+        let classesLimit = playerClasses.some(c => c.classCard === Class.supermunchkin) ? 3 : 1;
+        let classesCount = playerClasses.length;
+        if (classesCount >= classesLimit) {
+            throw new Error(`Вы не можете приобрести новый класс`);
         }
     }
 
-    static userShouldBeReadyForRace(card: Card, player: Player, target: Player): void {
-        if (player.hasRace(card.raceCard)) {
-            throw `У вас уже есть эта раса`;
+    static userShouldBeReadyForRace(context: Table, card: Card, player: Player, target: Player): void {
+        if (Player.hasRace(player, card.raceCard)) {
+            throw new Error(`У вас уже есть эта раса`);
         }
 
         if (card.raceCard === Race.halfblood) {
             return;
         }
 
-        let racesLimit = !player.hasRace(Race.halfblood) ? 1 : 0;
-        let racesCount = player.cards[CardSlot.races].length;
+        let racesLimit = !Player.hasRace(player, Race.halfblood) ? 1 : 0;
+        let racesCount = player.cards && player.cards[CardSlot.races].length;
         if (racesCount > racesLimit) {
-            throw `Вы не можете приобрести новую расу`;
+            throw new Error(`Вы не можете приобрести новую расу`);
         }
     }
 
-    static cardShouldBeInHandOrGame(card: Card, player: Player, target: Player): void {
-        let cardSlot = player.findCardPlace(card);
+    static cardShouldBeInHandOrGame(context: Table, card: Card, player: Player, target: Player): void {
+        let cardSlot = card.currentSlot;
         if (cardSlot !== CardSlot.inGame && cardSlot !== CardSlot.inHand) {
-            throw 'Карта должна быть в руках или в игре';
+            throw new Error('Карта должна быть в руках или в игре');
         }
     }
 
-    static cardShouldBeInHand(card: Card, player: Player, target: Player): void {
-        let cardSlot = player.findCardPlace(card);
+    static cardShouldBeInHand(context: Table, card: Card, player: Player, target: Player): void {
+        let cardSlot = card.currentSlot;
         if (cardSlot !== CardSlot.inHand) {
-            throw 'Карта должна быть в руках';
+            throw new Error('Карта должна быть в руках');
         }
     }
 }
