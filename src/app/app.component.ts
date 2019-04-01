@@ -93,9 +93,15 @@ export class AppComponent implements OnInit {
         return this.player.id === this.table.currentTurn;
     }
 
+    randomIndex(arrayLength: number) {
+        return Math.min(arrayLength - 1, Math.floor(Math.random() * arrayLength));
+    }
+
     openTheDoor() {
         if (this.table.doors.length) {
-            let card = this.table.doors.find(c => !c.owner);
+            let doors = this.table.doors.filter(c => !c.owner);
+            let randomIndex = this.randomIndex(doors.length);
+            let card = doors[randomIndex];
             card.owner = this.player.id;
             card.currentSlot = CardSlot.inHand;
         }
