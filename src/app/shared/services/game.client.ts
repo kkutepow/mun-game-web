@@ -18,7 +18,7 @@ export class GameClient {
     }
 
     async doCommand(command: Commands, args: CommandOptions) {
-        const result = Commands.do(command, args, this.contract, this.context);
+        const result = Command.do(command, args, this.contract, this.context);
 
         if (!result.errors) {
             this.onClientContextChanged.emit(this.context);
