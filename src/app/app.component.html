@@ -6,78 +6,61 @@
 </div>
 
 <div class="card-actions" *ngIf="cardActions" (click)="CancelAction()">
-    <a class="card-action" *ngFor="let actionName of cardActions" (click)="doCardAction(actionName); $event.stopPropagation()">{{actionName}}</a>    
+    <a
+        class="card-action"
+        *ngFor="let actionName of cardActions"
+        (click)="doCardAction(actionName); $event.stopPropagation()"
+        >{{ actionName }}</a
+    >
 </div>
 
 <div *ngIf="table">
     <!-- ToDo: move to separate component "sign-in form" -->
-    <div class="form" *ngIf="!cookiesAreSet()">
-        <p>Enter your name please:</p>
-        <button class="btn" *ngFor="let player of table.players" (click)="register(player)">{{ player.name }}</button>
-    </div>
 
-    <div *ngIf="cookiesAreSet()">
-        <div class="config-panel">
-            <div class="flex-container">
-                <div class="container">
-                    <div class="text-label">Current turn:</div>
-                    <div class="user-name" *ngFor="let player of table.players"
-                        [ngClass]="player.id === table.currentTurn ? 'selected' : ''">
-                        {{ player.name }}
-                    </div>
+    <div class="config-panel">
+        <div class="flex-container">
+            <div class="container">
+                <div class="text-label">Current turn:</div>
+                <div
+                    class="user-name"
+                    *ngFor="let player of table.players"
+                    [ngClass]="player.id === table.currentTurn ? 'selected' : ''"
+                >
+                    {{ player.name }}
+                </div>
 
-                    <div class="text-label">Your name:</div>
-                    <div class="user-name" [ngClass]="player.id === table.currentTurn ? 'selected' : ''">
-                        {{ player.name }}
-                    </div>
-                    <div class="text-label">Your level:</div>
-                    <div class="user-name">
-                        {{ player.level }}
-                    </div>
-                    <div class="text-label">Your gender:</div>
-                    <div class="user-name">
-                        {{ player.gender | uppercase }}
-                    </div>
-                    <div class="text-label">Table key:</div>
-                    <div class="user-name">
-                        {{ tableKey }}
-                    </div>
+                <div class="text-label">Your name:</div>
+                <div class="user-name" [ngClass]="player.id === table.currentTurn ? 'selected' : ''">
+                    {{ player.name }}
+                </div>
+                <div class="text-label">Your level:</div>
+                <div class="user-name">
+                    {{ player.level }}
+                </div>
+                <div class="text-label">Your gender:</div>
+                <div class="user-name">
+                    {{ player.gender | uppercase }}
+                </div>
+                <div class="text-label">Table key:</div>
+                <div class="user-name">
+                    {{ tableKey }}
                 </div>
             </div>
         </div>
+    </div>
 
-        <!-- Game client -->
-        <div class="game-client">
-            <app-player-panel [player]="player" [cards]="getCards(player)" (cardOpen)="onCardOpen($event)">
-            </app-player-panel>
+    <!-- Game client -->
+    <div class="game-client">
+        <app-player-panel [player]="player" [cards]="getCards(player)" (cardOpen)="onCardOpen($event)" *ngFor="let p of table.players"></app-player-panel>
 
-            <div class="player-panels-wrapper">
-                <!-- Players -->
-                <!-- Players -->
-                <!-- <app-enemy-panel
-                    *ngFor="let player of enemies()"
-                    [player]="player"
-                    (cardOpen)="onCardOpen($event)"
-                ></app-enemy-panel> -->
-            </div>
+        <div class="player-panels-wrapper"></div>
 
-            <!-- Card details panel -->
-            <!-- <app-card-details
-                [card]="selectedCard"
-                (action)="onCardDetailsAction($event)"
-                (close)="selectedCard = null"
-            ></app-card-details> -->
-
-            <!-- Game Table -->
-            <!-- <app-table></app-table> -->
-
-            <div class="table" *ngIf="yourTurn()">
-                <button class="deck-button" (click)="openTheDoor()">
-                    Doors
-                    <div class="small-font" *ngFor="let card of doors()">{{ card.cardName }}</div>
-                </button>
-                <button class="deck-button">Treasures</button>
-            </div>
+        <div class="table" *ngIf="yourTurn()">
+            <button class="deck-button" (click)="openTheDoor()">
+                Doors
+                <div class="small-font" *ngFor="let card of doors()">{{ card.cardName }}</div>
+            </button>
+            <button class="deck-button">Treasures</button>
         </div>
     </div>
 </div>
