@@ -1,4 +1,4 @@
-import { RoundPhase, Gender, Race, Class, CardSlot, Command } from '../enums/enums';
+import { RoundPhase, Gender, Race, Class, CardSlot, Commands } from '../enums/enums';
 import { CommandOptions } from '../commands/command.options';
 
 export class GameContract {
@@ -51,6 +51,6 @@ export class RequestContract {
 
 export class RequestAction {
     label: string;
-    command: Command;
+    command: Commands;
     commandArgs: CommandOptions;
 }

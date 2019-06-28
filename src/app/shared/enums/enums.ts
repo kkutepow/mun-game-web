@@ -50,7 +50,7 @@ export enum RoundPhase {
     SendingCards,
 }
 
-export enum Command {
+export enum Commands {
     GiveCard,
     DropCard,
     OpenDoor,

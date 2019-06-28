@@ -2,7 +2,9 @@ import { GameContract } from '../contracts/game.contract';
 import { GameContext } from '../contexts/game.context';
 import { EventEmitter } from '@angular/core';
 import { CommandOptions } from '../commands/command.options';
-import { Command as Commands } from '../enums/enums';
+import { Commands } from '../enums/enums';
+import { GameCommands } from '../commands/commands';
+import { CommandResult } from '../commands/command.result';
 
 export class GameClient {
     contract: GameContract;
@@ -11,22 +13,24 @@ export class GameClient {
     public onContractChanged = new EventEmitter<GameContract>();
     public onClientContextChanged = new EventEmitter<GameContext>();
 
-    constructor (gameContract: GameContract) {
+    constructor(gameContract: GameContract) {
         this.contract = gameContract;
     }
 
     async doCommand(command: Commands, args: CommandOptions) {
-        const result = await Command.do(command, args, this.contract, this.context);
+        const result = Commands.do(command, args, this.contract, this.context);
 
+        if (!result.errors) {
+            this.onClientContextChanged.emit(this.context);
+            this.onContractChanged.emit(this.contract);
+        }
     }
 
-    doQuery() {
-        
-    }
+    doQuery() {}
 }
 
 export class Command {
-    static do(command: Commands, args: CommandOptions, contract: GameContract, context: GameContext) {
-        throw new Error("Method not implemented.");
-    }    
+    static do(command: Commands, args: CommandOptions, contract: GameContract, context: GameContext): CommandResult {
+        return GameCommands[command](args, contract, context);
+    }
 }
